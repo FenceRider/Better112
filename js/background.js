@@ -1,5 +1,35 @@
 'use strict';
 
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    console.log("got " + message + " from " + sender);
+    if (message == "ready" && sender.tab) {
+
+
+        chrome.storage.sync.get(['colormode'], function (result) {
+            sendResponse({ colormode: result.colormode });
+        });
+        return true;
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * Global variables, visible only inside background.js
  */
@@ -36,19 +66,19 @@ chrome.webRequest.onBeforeRequest.addListener(function (details) {
             tabId: tabId,
             text: 'XXX'
         });
-        return {cancel: true};
+        return { cancel: true };
     } else {
-        return {cancel: false};
+        return { cancel: false };
     }
 
     // Block the request if domain matches no whitelisted domain
     if (domainBlocked.domainBlocked) {
-      return {cancel: true};
+        return { cancel: true };
     } else {
-      return {cancel: false};
+        return { cancel: false };
     }
-    },
-    {urls: ['*://*/*']},
+},
+    { urls: ['*://*/*'] },
     ['blocking']
 );
 
@@ -63,7 +93,7 @@ chrome.contextMenus.create(
         type: 'normal',
         contexts: ['image'],
         onclick: function (info, tab) {
-            chrome.tabs.create({url: 'https://www.google.com/search?&tbm=isch&q=' + encodeURI(info.srcUrl)});
+            chrome.tabs.create({ url: 'https://www.google.com/search?&tbm=isch&q=' + encodeURI(info.srcUrl) });
         }
     }
 );

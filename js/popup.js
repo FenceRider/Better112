@@ -5,58 +5,22 @@
  */
 let backgroundJS = chrome.extension.getBackgroundPage();
 
+document.getElementById("light").onclick = ()=>{color("light")}
+document.getElementById("dark").onclick  = ()=>{color("dark")}
+document.getElementById("night").onclick = ()=>{color("night")}
+document.getElementById("original").onclick = ()=>{color("original")}
 
-/**
- * Render a list of all audible tabs
- */
-let renderTabsAudible = function () {
-    getAllTabsAudible(function(tabs) {
-        for (let tab of tabs) {
-            let html = `
-                        <div class="tab" data-tab-id="${tab.id}" data-window-id="${tab.windowId}">
-                            <div class="tab__item tab__title" title="${tab.title}">${tab.title}</div>
-                            <div class="tab__item tab__url" title="${tab.url}">${tab.url}</div>
-                            <a href="" tabindex="-1" class="tab__item tab__focus">focus</a>
-                            <a href="" tabindex="-1" class="tab__item tab__close">close</a>
-                        </div>
-                       `;
-            document.querySelector('.js-tabs-audible').innerHTML += html;
-        }
+
+function color(mode) {
+    chrome.storage.sync.set({ colormode: mode }, function (e) {
+
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            chrome.tabs.update(tabs[0].id, { url: tabs[0].url });
+        });
+        
     });
-};
+}
 
 
-/**
- * RUN
- */
-renderTabsAudible();
 
 
-/**
- * Event listeners
- */
-document.querySelector('.js-tabs-audible').addEventListener('click', function (e) {
-    e.preventDefault();
-
-    let targetEl = e.target;
-
-    // React to clicks on tab items only
-    if (targetEl.matches('.tab__item')) {
-        let tabEl = targetEl.closest('.tab');
-        let tabId = parseInt(tabEl.dataset.tabId);
-        let windowId = parseInt(tabEl.dataset.windowId);
-
-        // Focus selected window/tab
-        if (targetEl.matches('.tab__focus')) {
-            chrome.windows.update(windowId, {focused: true});
-            chrome.tabs.update(tabId, {active: true});
-        }
-
-        // Close selected tab
-        if (targetEl.matches('.tab__close')) {
-            chrome.tabs.remove(tabId, function(){
-                document.querySelector(`.js-tabs-audible .tab[data-tab-id="${tabId}"]`).remove();
-            });
-        }
-    }
-});

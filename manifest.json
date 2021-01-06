@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "Chrome Extension Starter Kit",
+  "name": "Better 112",
   "description": "",
   "version": "1.0.0",
   "icons": {
@@ -15,7 +15,7 @@
       "38": "icon/icon-38.png"
     },
     "default_popup": "html/popup.html",
-    "default_title": "Chrome Extension Starter Kit"
+    "default_title": "Better 112"
   },
   "options_ui": {
     "page": "html/options.html",
@@ -46,10 +46,11 @@
   ],
   "permissions": [
     "tabs",
+    "storage",
     "contextMenus",
     "webRequest",
     "webRequestBlocking",
     "<all_urls>"
   ],
-  "web_accessible_resources": ["css/bluma.css"]
+  "web_accessible_resources": ["css/bluma.css", "css/dark.css", "css/night.css"]
 }
