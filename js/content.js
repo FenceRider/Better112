@@ -216,7 +216,12 @@ chrome.runtime.sendMessage("ready", function (response) {
     console.log(response)
     if(response.colormode == "original") return;
     init("light");
-    setCss(response.colormode);
+    
+    if(!response.colormode){
+        setCss("night");
+    }else{
+        setCss(response.colormode);
+    }
 });
 
 
