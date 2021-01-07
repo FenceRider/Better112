@@ -1,5 +1,24 @@
 body {
-    width: 480px;
+    width: 400px;
+    background-color: rgb(37, 37, 37);
+}
+
+.section {
+  padding: 1.5rem !important;
+}
+
+.container2 {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  border-color: rgb(0, 0, 0) !important;
+  border-width: 1.5px !important;
+}
+
+.button:hover {
+  opacity: 0.85 !important;
 }
 
 .tab {
@@ -25,4 +44,15 @@ body {
 
 .tab__close {
     color: #ff0000;
+}
+
+#title-text {
+  color: rgb(230, 230, 230);
+  margin-bottom: 15px !important;
+}
+
+#subtitle-text {
+  color: rgb(187, 187, 187);
+  margin-top: 0 !important;
+  margin-bottom: 12px !important;
 }
