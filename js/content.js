@@ -58,6 +58,8 @@ function setCss(mode) {
             break;
     }
     addCss(css);
+
+    addCss(chrome.extension.getURL('css/content.css'));
 }
 
 
