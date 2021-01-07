@@ -115,6 +115,8 @@ function init(colormode) {
                 <a href="https://www2.ucsc.edu/courses/cse112-wm/:/Languages/" class="level-item" style="margin-left:25px;margin-right:25px">Languages</a>
             
                 <a href="https://www2.ucsc.edu/courses/cse112-wm/:/Syllabus/submit-checklist/submit-checklist.pdf" class="level-item" style="margin-left:25px;margin-right:25px">Checklist</a>
+                <a href="https://www2.ucsc.edu/courses/cse112-wm/:/Syllabus/pair-programming/pair-programming.pdf" class="level-item" style="margin-left:25px;margin-right:25px">Pair Programming</a>
+                
             </div>
         
         </div>
