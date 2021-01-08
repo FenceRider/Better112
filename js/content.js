@@ -227,7 +227,7 @@ function init(colormode) {
 
                 let danger = type.includes("EXAM");
                 let warning = type.includes("ASG") || type.includes("LAB");
-                let highlight = danger ? "has-background-danger" : warning ? "has-background-warning" : "";
+                let highlight = (danger ? "has-background-danger" : warning ? "has-background-warning" : "")  + " " +  (colormode=='dark'? 'has-text-light' : "");
 
                 string_assignment_summary += `<tr><td>${date}</td><td class="${highlight}">${type}</td><td><a href="${link ? link : "#"}">${link ? link : ""}</a></td><td>${due_things_lines[i]}</td></tr>`
             } catch (e) {
