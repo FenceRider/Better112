@@ -2,3 +2,12 @@ body {
     *background: #ff0000 !important;
 }
 
+.table {
+  width: 780px;
+  margin-top: 10px;
+}
+
+tbody tr {
+  height: 80px !important;
+  border-radius: 10px !important;
+}
