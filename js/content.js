@@ -53,7 +53,9 @@ function addCss(fileName) {
 
 function setCss(mode) {
     //clear all css
-    document.querySelectorAll('style,link[rel="stylesheet"]').forEach(item => item.remove())
+    document.querySelectorAll('style,link[rel="stylesheet"]').forEach(item => item.remove());
+    delete document.bgColor;
+    document.body.removeAttribute('bgcolor')
     let css;
     switch (mode) {
         case "light":
@@ -78,7 +80,7 @@ function init(colormode) {
 
     setCss(colormode)
 
-    if (location.href.endsWith(".pdf")) {
+    if (location.href.toLowerCase().endsWith(".pdf")) {
         return;
     }
 
@@ -101,26 +103,38 @@ function init(colormode) {
     document.querySelectorAll("table").forEach((e) => { e.className = "table is-bordered is-striped is-narrow is-hoverable is-fullwidth"; e.style.tableLayout = "fixed"; })
 
 
-    //move pwd
-    let pwd = document.querySelector(".PWD_URL").innerHTML;
-    document.querySelector(".PWD_URL").remove();
-    pwd = pwd.split("\n")[1].split("PWD: ")[1];
-    let newpwd = document.createElement("div");
-    let copy_interval = 0;
-    newpwd.onclick = () => {
-        document.getElementById('pwd_text').innerHTML = "Copied!"
-        clearInterval(copy_interval);
-        copy_interval = setInterval(() => {
-            document.getElementById('pwd_text').innerHTML = pwd;
-        }, 2000)
-        copyToClipboard(pwd);
-    }
-    newpwd.style.cursor = "pointer";
-    newpwd.classList = "level"
-    newpwd.innerHTML = `<div class="container"><span class="is-size-4 tag is-success" style="border-top-right-radius:0;border-bottom-right-radius:0">PWD:</span><span id="pwd_text" class="is-size-4 tag is-black has-text-success" style="border-top-left-radius:0;border-bottom-left-radius:0;">${pwd}</span>
-                        </div>`
-    container.prepend(newpwd)
+    //fix lists
+    document.querySelectorAll('ul').forEach((e)=>{
+        let list_string = e.outerHTML;
+        let content = document.createElement('div');
+        content.classList.add('content');
+        content.innerHTML = list_string;
+        e.parentElement.replaceChild(content, e);
+    })
 
+
+    //move pwd
+    let pwd = document.querySelector(".PWD_URL");
+    if (pwd) {
+        pwd = pwd.innerHTML;
+        document.querySelector(".PWD_URL").remove();
+        pwd = pwd.split("\n")[1].split("PWD: ")[1];
+        let newpwd = document.createElement("div");
+        let copy_interval = 0;
+        newpwd.onclick = () => {
+            document.getElementById('pwd_text').innerHTML = "Copied!"
+            clearInterval(copy_interval);
+            copy_interval = setInterval(() => {
+                document.getElementById('pwd_text').innerHTML = pwd;
+            }, 2000)
+            copyToClipboard(pwd);
+        }
+        newpwd.style.cursor = "pointer";
+        newpwd.classList = "level"
+        newpwd.innerHTML = `<div class="container"><span class="is-size-4 tag is-success" style="border-top-right-radius:0;border-bottom-right-radius:0">PWD:</span><span id="pwd_text" class="is-size-4 tag is-black has-text-success" style="border-top-left-radius:0;border-bottom-left-radius:0;">${pwd}</span>
+                        </div>`
+        container.prepend(newpwd)
+    }
 
     //insert nav 
     let nav = document.createElement('div');
@@ -174,7 +188,7 @@ function init(colormode) {
         right.innerHTML = ileft;
 
         outer_div.append(left);
-        outer_div.append(right);        
+        outer_div.append(right);
 
         document.querySelectorAll(".TITLE").forEach((e) => { e.remove() })
         container.prepend(outer_div);
@@ -232,8 +246,8 @@ function init(colormode) {
 
     }
 
-    window.evilEmpire = ()=>{
-        document.getElementById('evil_empire').innerHTML +=  `
+    window.evilEmpire = () => {
+        document.getElementById('evil_empire').innerHTML += `
         <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/OS-Wars.gif">
         <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/bmw-wo-windows.gif">
         <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/browser-error.gif">
@@ -276,12 +290,14 @@ function init(colormode) {
 chrome.runtime.sendMessage("ready", function (response) {
     console.log(response)
     if (response.colormode == "original") return;
-    init("light");
+
+
 
     if (!response.colormode) {
-        setCss("night");
+        init("night");
+
     } else {
-        setCss(response.colormode);
+        init(response.colormode);
     }
 });
 
