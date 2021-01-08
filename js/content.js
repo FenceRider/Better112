@@ -147,13 +147,14 @@ function init(colormode) {
     pwd = pwd.split("\n")[1].split("PWD: ")[1];
     let newpwd = document.createElement("div");
     let copy_interval = 0;
-    newpwd.onclick = ()=>{
+    newpwd.onclick = () => {
         document.getElementById('pwd_text').innerHTML = "Copied!"
         clearInterval(copy_interval);
-        copy_interval =  setInterval(()=>{
+        copy_interval = setInterval(() => {
             document.getElementById('pwd_text').innerHTML = pwd;
-        }, 3000)
-        copyToClipboard.bind(this, pwd);}
+        }, 2000)
+        copyToClipboard(pwd);
+    }
     newpwd.style.cursor = "pointer";
     newpwd.classList = "level"
     newpwd.innerHTML = `<div class="container"><span class="is-size-4 tag is-success" style="border-top-right-radius:0;border-bottom-right-radius:0">PWD:</span><span id="pwd_text" class="is-size-4 tag is-black has-text-success" style="border-top-left-radius:0;border-bottom-left-radius:0;">${pwd}</span>
@@ -213,7 +214,7 @@ function init(colormode) {
         right.innerHTML = ileft;
 
         outer_div.append(left);
-        outer_div.append(right);
+        outer_div.append(right);        
 
         document.querySelectorAll(".TITLE").forEach((e) => { e.remove() })
         container.prepend(outer_div);
@@ -252,10 +253,10 @@ function init(colormode) {
 
                 let danger = type.includes("EXAM");
                 let warning = type.includes("ASG") || type.includes("LAB");
-                let highlight = danger?"has-background-danger":warning?"has-background-warning":"";
+                let highlight = danger ? "has-background-danger" : warning ? "has-background-warning" : "";
 
                 string_assignment_summary += `<tr><td>${date}</td><td class="${highlight}">${type}</td><td><a href="${link ? link : "#"}">${link ? link : ""}</a></td><td>${due_things_lines[i]}</td></tr>`
-            } catch (e) { 
+            } catch (e) {
                 string_assignment_summary += `<tr><td>.</td><td>.</td><td><a href="#">.</a></td><td>${due_things_lines[i]}</td></tr>`
             }
         });
@@ -271,9 +272,35 @@ function init(colormode) {
 
     }
 
-    let footer = document.createElement("div");
-    footer.innerHTML = `
+    window.evilEmpire = ()=>{
+        document.getElementById('evil_empire').innerHTML +=  `
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/OS-Wars.gif">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/bmw-wo-windows.gif">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/browser-error.gif">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/browser-options.gif">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/drag-and-drop.jpg">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/error95.gif">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/freebugs.jpg">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/microcd.jpg">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/microshit.jpg">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/missing-doze-key.jpg">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/monopoly.jpg">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/ms-dialog-boxes.gif">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/ms-tech-support.txt">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/mskey.jpg">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/secret-w98.jpg">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/win1900-1.jpg">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/win1900.jpg">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/windows-firewall.jpg">
+        <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/windozent.jpg">
+        `
+    }
 
+    let footer = document.createElement("div");
+    footer.onclick = window.evilEmpire;
+    footer.innerHTML = `
+        <div>Evil Empire</div>
+        <div id="evil_empire"><div>
     `;
     container.append(footer);
 
@@ -281,19 +308,19 @@ function init(colormode) {
 
 
     //set listeners
-    
+
 
 }
 
 
 chrome.runtime.sendMessage("ready", function (response) {
     console.log(response)
-    if(response.colormode == "original") return;
+    if (response.colormode == "original") return;
     init("light");
-    
-    if(!response.colormode){
+
+    if (!response.colormode) {
         setCss("night");
-    }else{
+    } else {
         setCss(response.colormode);
     }
 });

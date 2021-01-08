@@ -1,7 +1,7 @@
 {
-  "name": "chrome-extension-starter-pack",
+  "name": "better-112",
   "version": "1.0.0",
-  "description": "",
+  "description": "Visual update to 112's website. Easier to find commonly used files and key dates.",
   "private": true,
   "homepage": "",
   "devDependencies": {
