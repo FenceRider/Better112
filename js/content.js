@@ -89,8 +89,22 @@ function init(colormode) {
 
 
     //fix tables
-    document.querySelectorAll("table").forEach((e) => { e.className = "table is-bordered is-striped is-narrow is-hoverable is-fullwidth"; e.style.tableLayout = "fixed"; })
-
+    document.querySelectorAll("table").forEach((e) => { 
+      e.className = "table is-bordered is-striped"; 
+      e.style.tableLayout = "fixed"; 
+      e.querySelectorAll("td").forEach((day) => {
+        const a = day.innerHTML.split(";");
+        console.log(a);
+        if (a.length == 3) {
+          day.innerHTML = a[2];
+        } else if (a.length == 4) {
+          day.innerHTML = a[3];
+        } else if (a.length == 6) {
+          day.innerHTML = `${a[3]}${a[4]}${a[5]}`;
+        }
+      })
+    })
+    
 
     //move pwd
     let pwd = document.querySelector(".PWD_URL").innerHTML;
