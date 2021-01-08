@@ -113,7 +113,8 @@ function init(colormode) {
         copy_interval =  setInterval(()=>{
             document.getElementById('pwd_text').innerHTML = pwd;
         }, 3000)
-        copyToClipboard.bind(this, pwd);}
+        copyToClipboard(pwd);
+    }
     newpwd.style.cursor = "pointer";
     newpwd.classList = "level"
     newpwd.innerHTML = `<div class="container"><span class="is-size-4 tag is-success" style="border-top-right-radius:0;border-bottom-right-radius:0">PWD:</span><span id="pwd_text" class="is-size-4 tag is-black has-text-success" style="border-top-left-radius:0;border-bottom-left-radius:0;">${pwd}</span>
