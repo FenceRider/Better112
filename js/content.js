@@ -112,7 +112,7 @@ function init(colormode) {
         clearInterval(copy_interval);
         copy_interval =  setInterval(()=>{
             document.getElementById('pwd_text').innerHTML = pwd;
-        }, 3000)
+        }, 2000)
         copyToClipboard(pwd);
     }
     newpwd.style.cursor = "pointer";
