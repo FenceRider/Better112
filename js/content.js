@@ -15,6 +15,15 @@ window.addEventListener("message", function (event) {
 }, false);
 
 
+const copyToClipboard = str => {
+    const el = document.createElement('textarea');
+    el.value = str;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+};
+
 
 /**
  * Utility function to add CSS in multiple passes.
@@ -111,8 +120,18 @@ function init(colormode) {
     document.querySelector(".PWD_URL").remove();
     pwd = pwd.split("\n")[1].split("PWD: ")[1];
     let newpwd = document.createElement("div");
+    let copy_interval = 0;
+    newpwd.onclick = ()=>{
+        document.getElementById('pwd_text').innerHTML = "Copied!"
+        clearInterval(copy_interval);
+        copy_interval =  setInterval(()=>{
+            document.getElementById('pwd_text').innerHTML = pwd;
+        }, 3000)
+        copyToClipboard.bind(this, pwd);}
+    newpwd.style.cursor = "pointer";
     newpwd.classList = "level"
-    newpwd.innerHTML = `<div class="container"><span class="is-size-4 tag is-success" style="border-top-right-radius:0;border-bottom-right-radius:0">PWD:</span><span class="is-size-4 tag is-black has-text-success" style="border-top-left-radius:0;border-bottom-left-radius:0">${pwd}</span></div>`
+    newpwd.innerHTML = `<div class="container"><span class="is-size-4 tag is-success" style="border-top-right-radius:0;border-bottom-right-radius:0">PWD:</span><span id="pwd_text" class="is-size-4 tag is-black has-text-success" style="border-top-left-radius:0;border-bottom-left-radius:0;">${pwd}</span>
+                        </div>`
     container.prepend(newpwd)
 
 
@@ -226,6 +245,17 @@ function init(colormode) {
 
     }
 
+    let footer = document.createElement("div");
+    footer.innerHTML = `
+
+    `;
+    container.append(footer);
+
+
+
+
+    //set listeners
+    
 
 }
 
