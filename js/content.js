@@ -100,7 +100,9 @@ function init(colormode) {
 
 
     //fix tables
-    document.querySelectorAll("table").forEach((e) => { e.className = "table is-bordered is-striped is-narrow is-hoverable is-fullwidth"; e.style.tableLayout = "fixed"; })
+    document.querySelectorAll("table").forEach((e) => { 
+        if(e.border == '0' ) return; //some tables were used to get things next to each other https://www2.ucsc.edu/courses/cse112-wm/:/Languages/ocaml/matuszek-concise-ocaml.html
+        e.className = "table is-bordered is-striped is-narrow is-hoverable is-fullwidth"; e.style.tableLayout = "fixed"; })
 
 
     //fix lists
