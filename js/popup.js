@@ -23,8 +23,10 @@ original.onclick = () => { color("original") }
 function color(mode) {
     chrome.storage.sync.set({ colormode: mode }, function (e) {
 
+        let refresh = currentColorMode == 'original' || mode=="original"; //outside cuz async or something
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-            chrome.tabs.update(tabs[0].id, { url: tabs[0].url });
+            updateTabs(mode, refresh); //refresh if going to or coming from original
+            //chrome.tabs.update(tabs[0].id, { url: tabs[0].url });
         });
 
         removeOutline(mode)
@@ -63,3 +65,16 @@ function removeOutline(colormode) {
     }
 }
 
+
+function updateTabs(colormode, refresh=false){
+    chrome.tabs.query({url:'https://www2.ucsc.edu/courses/cse112-wm/*'}, function(tabs) {
+        tabs.forEach((t)=>{
+            if(refresh)
+                chrome.tabs.reload(t.id)
+            else
+                chrome.tabs.sendMessage(t.id, {colormode: colormode}, function(response) {
+            });
+        })
+        
+    });
+}

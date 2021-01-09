@@ -3,6 +3,17 @@
 
 var port = chrome.runtime.connect();
 
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      let colormode = request.colormode;
+      setCss(colormode);
+      
+    }
+            
+  );
+
+
+  /*
 window.addEventListener("message", function (event) {
     // We only accept messages from ourselves
     if (event.source != window)
@@ -13,7 +24,7 @@ window.addEventListener("message", function (event) {
         port.postMessage(event.data.text);
     }
 }, false);
-
+*/
 
 const copyToClipboard = str => {
     const el = document.createElement('textarea');
