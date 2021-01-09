@@ -56,6 +56,7 @@ function setCss(mode) {
     document.querySelectorAll('style,link[rel="stylesheet"]').forEach(item => item.remove());
     delete document.bgColor;
     document.body.removeAttribute('bgcolor')
+    document.querySelectorAll('[bgcolor]').forEach((e)=>{e.removeAttribute('bgcolor')});
     let css;
     switch (mode) {
         case "light":
@@ -102,7 +103,7 @@ function init(colormode) {
     //fix tables
     document.querySelectorAll("table").forEach((e) => { 
         if(e.border == '0' ) return; //some tables were used to get things next to each other https://www2.ucsc.edu/courses/cse112-wm/:/Languages/ocaml/matuszek-concise-ocaml.html
-        e.className = "table is-bordered is-striped is-narrow is-hoverable is-fullwidth"; e.style.tableLayout = "fixed"; })
+        e.className = "table is-bordered is-striped is-narrow is-fullwidth"; e.style.tableLayout = "fixed"; })
 
 
     //fix lists
@@ -128,7 +129,7 @@ function init(colormode) {
             clearInterval(copy_interval);
             copy_interval = setInterval(() => {
                 document.getElementById('pwd_text').innerHTML = pwd;
-            }, 2000)
+            }, 1700)
             copyToClipboard(pwd);
         }
         newpwd.style.cursor = "pointer";
@@ -216,7 +217,7 @@ function init(colormode) {
 
 
         //assignment summary
-        let string_assignment_summary = '<table class="table is-striped is-hoverable is-fullwidth"><tr><th>Due</th><th>Type</th><th>Link</th><th>Original</th></tr>'
+        let string_assignment_summary = '<table class="table is-striped is-fullwidth"><tr><th>Due</th><th>Type</th><th>Link</th><th>Original</th></tr>'
         let due_things = document.querySelector('pre').innerText.split('\n').map((s) => s.split("DUE."));
         let due_things_lines = document.querySelector('pre').innerText.split('\n');
         due_things.forEach((t, i) => {
@@ -238,11 +239,54 @@ function init(colormode) {
         });
         let assignment_summary = document.createElement('div');
         assignment_summary.innerHTML = string_assignment_summary;
-        //container.append(assignment_summary);
 
         let due_things_content = document.querySelector('pre').innerHTML;
         document.querySelector('pre').replaceWith(assignment_summary);
         document.querySelector('pre').remove();
+
+        
+        //fix calendars
+        document.querySelectorAll('.month').forEach((e)=>{
+            let table = e.nextElementSibling;
+            table.classList.add("b112calendar");
+            table.classList.remove('is-narrow');
+            table.classList.remove('is-fullwidth');
+
+            let header = document.createElement("tr");
+            header.innerHTML = `<thead>
+                                  <tr class="calHeader">
+                                    <th class="is-primary">S</th>
+                                    <th class="is-primary">M</th>
+                                    <th class="is-primary">T</th>
+                                    <th class="is-primary">W</th>
+                                    <th class="is-primary">T</th>
+                                    <th class="is-primary">F</th>
+                                    <th class="is-primary">S</th>
+                                  </tr>
+                                </thead>`;
+            table.insertBefore(header, table.firstChild);
+            table.querySelectorAll("td").forEach((day) => {
+              const a = day.innerHTML.split(";");
+              if (a.length == 3) {
+                day.innerHTML = a[2];
+              } else if (a.length == 4) {
+                if (a[2].search("Holiday") > -1 || a[2].search("Grades") > -1 || a[2].search("End") > -1) {
+                  day.innerHTML = `${a[2]}${a[3]}`;
+                } else if (a[3].search("EXAM") > -1 || a[2].search("MIDTERM") > -1) {
+                  day.innerHTML = `${a[2]}  ${a[3]}`;
+                } else {
+                  day.innerHTML = a[3];
+                }
+              } else if (a.length == 5) {
+                day.innerHTML = `${a[2]}${a[3]}${a[4]}`;
+              } else if (a.length == 6) {
+                day.innerHTML = `${a[3]}${a[4]}${a[5]}`;
+              }
+            })
+        })
+
+
+
 
     } else {
 

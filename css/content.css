@@ -1,4 +1,9 @@
-body {
-    *background: #ff0000 !important;
-}
-
+.b112calendar.table {
+    width: 780px;
+    margin-top: 10px;
+  }
+  
+  .b112calendar tbody tr{
+    height: 80px !important;
+    border-radius: 10px !important;
+  }
