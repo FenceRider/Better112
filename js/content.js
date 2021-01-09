@@ -118,8 +118,8 @@ function init(colormode) {
 
     //fix tables
     document.querySelectorAll("table").forEach((e) => { 
-      if(e.border == '0' ) return; //some tables were used to get things next to each other https://www2.ucsc.edu/courses/cse112-wm/:/Languages/ocaml/matuszek-concise-ocaml.html
-      e.className = "table is-bordered is-striped"; 
+      if (e.border == '0' ) return; //some tables were used to get things next to each other https://www2.ucsc.edu/courses/cse112-wm/:/Languages/ocaml/matuszek-concise-ocaml.html
+      e.className = "table b112calendar is-bordered is-striped"; 
       e.style.tableLayout = "fixed"; 
       let header = document.createElement("tr");
       header.innerHTML = `<thead>
@@ -172,20 +172,20 @@ function init(colormode) {
         document.querySelector(".PWD_URL").remove();
         pwd = pwd.split("\n")[1].split("PWD: ")[1];
         let newpwd = document.createElement("div");
-        let copy_interval = 0;
+        let copy_timeout = 0;
         newpwd.onclick = () => {
-            document.getElementById('pwd_text').innerHTML = "Copied!"
-            clearInterval(copy_interval);
-            copy_interval = setInterval(() => {
-                document.getElementById('pwd_text').innerHTML = pwd;
-            }, 1700)
+            // document.getElementById('pwd_text').innerHTML = "Copied!"
+            clearInterval(copy_timeout);
+            copy_timeout = setTimeout(() => {
+                // document.getElementById('pwd_text').innerHTML = pwd;
+            }, 1500)
             copyToClipboard(pwd);
         }
         newpwd.style.cursor = "pointer";
-        newpwd.classList = "level"
-        newpwd.innerHTML = `<div><span class="is-size-4 tag is-success" style="border-top-right-radius:0;border-bottom-right-radius:0">PWD:</span><span id="pwd_text" class="is-size-4 tag is-black has-text-success" style="border-top-left-radius:0;border-bottom-left-radius:0; transition: width 0.5s;">${pwd}</span>
-                        </div>`
-        container.prepend(newpwd)
+        newpwd.classList = "level";
+        newpwd.innerHTML = `<div><span class="is-size-4 tag is-success" style="border-top-right-radius:0;border-bottom-right-radius:0">PWD:</span><span id="pwd_text" class="flash is-size-4 tag is-black has-text-success" style="border-top-left-radius:0;border-bottom-left-radius:0;">${pwd}</span>
+                            </div>`
+        container.prepend(newpwd);
     }
 
     //insert nav 
@@ -290,54 +290,8 @@ function init(colormode) {
         let due_things_content = document.querySelector('pre').innerHTML;
         document.querySelector('pre').replaceWith(assignment_summary);
         document.querySelector('pre').remove();
-
-        
-        //fix calendars
-        document.querySelectorAll('.month').forEach((e)=>{
-            let table = e.nextElementSibling;
-            table.classList.add("b112calendar");
-            table.classList.remove('is-narrow');
-            table.classList.remove('is-fullwidth');
-
-            let header = document.createElement("tr");
-            header.innerHTML = `<thead>
-                                  <tr class="calHeader">
-                                    <th class="is-primary">S</th>
-                                    <th class="is-primary">M</th>
-                                    <th class="is-primary">T</th>
-                                    <th class="is-primary">W</th>
-                                    <th class="is-primary">T</th>
-                                    <th class="is-primary">F</th>
-                                    <th class="is-primary">S</th>
-                                  </tr>
-                                </thead>`;
-            table.insertBefore(header, table.firstChild);
-            table.querySelectorAll("td").forEach((day) => {
-              const a = day.innerHTML.split(";");
-              if (a.length == 3) {
-                day.innerHTML = a[2];
-              } else if (a.length == 4) {
-                if (a[2].search("Holiday") > -1 || a[2].search("Grades") > -1 || a[2].search("End") > -1) {
-                  day.innerHTML = `${a[2]}${a[3]}`;
-                } else if (a[3].search("EXAM") > -1 || a[2].search("MIDTERM") > -1) {
-                  day.innerHTML = `${a[2]}  ${a[3]}`;
-                } else {
-                  day.innerHTML = a[3];
-                }
-              } else if (a.length == 5) {
-                day.innerHTML = `${a[2]}${a[3]}${a[4]}`;
-              } else if (a.length == 6) {
-                day.innerHTML = `${a[3]}${a[4]}${a[5]}`;
-              }
-            })
-        })
-
-
-
-
-    } else {
-
     }
+    
 
     window.evilEmpire = () => {
         document.getElementById('evil_empire').innerHTML += `

@@ -1,9 +1,19 @@
 .b112calendar.table {
     width: 780px;
     margin-top: 10px;
-  }
+}
   
-  .b112calendar tbody tr{
-    height: 80px !important;
-    border-radius: 10px !important;
-  }
+.b112calendar tbody tr{
+  height: 80px !important;
+  border-radius: 10px !important;
+}
+
+.flash {
+  background-position: center;
+  transition: background 1s;
+}
+
+.flash:active {
+  background: #838383 !important;
+  transition: background 0s;
+}
