@@ -12,13 +12,13 @@ chrome.storage.sync.get(['colormode'], function (result) {
 });
 
 let light = document.getElementById("light")
-light.onclick = ()=>{color("light")}
+light.onclick = () => { color("light") }
 let dark = document.getElementById("dark")
-dark.onclick  = ()=>{color("dark")}
+dark.onclick = () => { color("dark") }
 let night = document.getElementById("night")
-night.onclick = ()=>{color("night")}
+night.onclick = () => { color("night") }
 let original = document.getElementById("original")
-original.onclick = ()=>{color("original")}
+original.onclick = () => { color("original") }
 
 function color(mode) {
     chrome.storage.sync.set({ colormode: mode }, function (e) {
@@ -29,7 +29,7 @@ function color(mode) {
 
         removeOutline(mode)
 
-        switch(currentColorMode){
+        switch (currentColorMode) {
             case "light":
                 light.classList.add("is-outlined")
                 break;
@@ -42,13 +42,13 @@ function color(mode) {
             default:
                 original.classList.add("is-outlined")
         }
-        
+
         currentColorMode = mode;
     });
 }
 
-function removeOutline(colormode){
-    switch(colormode){
+function removeOutline(colormode) {
+    switch (colormode) {
         case "light":
             light.classList.remove("is-outlined")
             break;
@@ -60,8 +60,6 @@ function removeOutline(colormode){
             break;
         default:
             original.classList.remove("is-outlined")
-    }    
+    }
 }
-
-
 
