@@ -69,11 +69,11 @@ function removeOutline(colormode) {
 function updateTabs(colormode, refresh=false){
     chrome.tabs.query({url:'https://www2.ucsc.edu/courses/cse112-wm/*'}, function(tabs) {
         tabs.forEach((t)=>{
-            if(refresh)
+            //if(refresh)
                 chrome.tabs.reload(t.id)
-            else
-                chrome.tabs.sendMessage(t.id, {colormode: colormode}, function(response) {
-            });
+            //else
+            //    chrome.tabs.sendMessage(t.id, {colormode: colormode}, function(response) {
+            //});
         })
         
     });
