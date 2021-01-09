@@ -3,6 +3,17 @@
 
 var port = chrome.runtime.connect();
 
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      let colormode = request.colormode;
+      setCss(colormode);
+      
+    }
+            
+  );
+
+
+  /*
 window.addEventListener("message", function (event) {
     // We only accept messages from ourselves
     if (event.source != window)
@@ -13,7 +24,7 @@ window.addEventListener("message", function (event) {
         port.postMessage(event.data.text);
     }
 }, false);
-
+*/
 
 const copyToClipboard = str => {
     const el = document.createElement('textarea');
@@ -53,7 +64,10 @@ function addCss(fileName) {
 
 function setCss(mode) {
     //clear all css
-    document.querySelectorAll('style,link[rel="stylesheet"]').forEach(item => item.remove())
+    document.querySelectorAll('style,link[rel="stylesheet"]').forEach(item => item.remove());
+    delete document.bgColor;
+    document.body.removeAttribute('bgcolor')
+    document.querySelectorAll('[bgcolor]').forEach((e)=>{e.removeAttribute('bgcolor')});
     let css;
     switch (mode) {
         case "light":
@@ -83,7 +97,7 @@ function init(colormode) {
 
     setCss(colormode)
 
-    if (location.href.endsWith(".pdf")) {
+    if (location.href.toLowerCase().endsWith(".pdf")) {
         return;
     }
 
@@ -104,6 +118,7 @@ function init(colormode) {
 
     //fix tables
     document.querySelectorAll("table").forEach((e) => { 
+      if(e.border == '0' ) return; //some tables were used to get things next to each other https://www2.ucsc.edu/courses/cse112-wm/:/Languages/ocaml/matuszek-concise-ocaml.html
       e.className = "table is-bordered is-striped"; 
       e.style.tableLayout = "fixed"; 
       let header = document.createElement("tr");
@@ -139,30 +154,39 @@ function init(colormode) {
         }
       })
     })
-    
+
+    //fix lists
+    document.querySelectorAll('ul').forEach((e)=>{
+        let list_string = e.outerHTML;
+        let content = document.createElement('div');
+        content.classList.add('content');
+        content.innerHTML = list_string;
+        e.parentElement.replaceChild(content, e);
+    })
+
 
     //move pwd
-    let pwd = document.querySelector(".PWD_URL").innerHTML;
-    document.querySelector(".PWD_URL").remove();
-    pwd = pwd.split("\n")[1].split("PWD: ")[1];
-    let newpwd = document.createElement("div");
-    let copy_timeout = 0;
-    newpwd.onclick = () => {
-        document.getElementById('pwd_text').innerHTML = "Copied!"
-        document.getElementById('pwd_text').style.width = '120px';
-        clearTimeout(copy_timeout);
-        copy_timeout = setTimeout(() => {
-            document.getElementById('pwd_text').innerHTML = pwd;
-            document.getElementById('pwd_text').style.width = '500px';
-        }, 1700)
-        copyToClipboard(pwd);
-    }
-    newpwd.style.cursor = "pointer";
-    newpwd.classList = "level"
-    newpwd.innerHTML = `<div><span class="is-size-4 tag is-success" style="border-top-right-radius:0;border-bottom-right-radius:0">PWD:</span><span id="pwd_text" class="is-size-4 tag is-black has-text-success" style="border-top-left-radius:0;border-bottom-left-radius:0; transition: width 0.5s;">${pwd}</span>
+    let pwd = document.querySelector(".PWD_URL");
+    if (pwd) {
+        pwd = pwd.innerHTML;
+        document.querySelector(".PWD_URL").remove();
+        pwd = pwd.split("\n")[1].split("PWD: ")[1];
+        let newpwd = document.createElement("div");
+        let copy_interval = 0;
+        newpwd.onclick = () => {
+            document.getElementById('pwd_text').innerHTML = "Copied!"
+            clearInterval(copy_interval);
+            copy_interval = setInterval(() => {
+                document.getElementById('pwd_text').innerHTML = pwd;
+            }, 1700)
+            copyToClipboard(pwd);
+        }
+        newpwd.style.cursor = "pointer";
+        newpwd.classList = "level"
+        newpwd.innerHTML = `<div><span class="is-size-4 tag is-success" style="border-top-right-radius:0;border-bottom-right-radius:0">PWD:</span><span id="pwd_text" class="is-size-4 tag is-black has-text-success" style="border-top-left-radius:0;border-bottom-left-radius:0; transition: width 0.5s;">${pwd}</span>
                         </div>`
-    container.prepend(newpwd)
-
+        container.prepend(newpwd)
+    }
 
     //insert nav 
     let nav = document.createElement('div');
@@ -214,7 +238,7 @@ function init(colormode) {
         right.innerHTML = ileft;
 
         outer_div.append(left);
-        outer_div.append(right);        
+        outer_div.append(right);
 
         document.querySelectorAll(".TITLE").forEach((e) => { e.remove() })
         container.prepend(outer_div);
@@ -240,7 +264,7 @@ function init(colormode) {
 
 
         //assignment summary
-        let string_assignment_summary = '<table class="table is-striped is-hoverable is-fullwidth"><tr><th>Due</th><th>Type</th><th>Link</th><th>Original</th></tr>'
+        let string_assignment_summary = '<table class="table is-striped is-fullwidth"><tr><th>Due</th><th>Type</th><th>Link</th><th>Original</th></tr>'
         let due_things = document.querySelector('pre').innerText.split('\n').map((s) => s.split("DUE."));
         let due_things_lines = document.querySelector('pre').innerText.split('\n');
         due_things.forEach((t, i) => {
@@ -253,7 +277,7 @@ function init(colormode) {
 
                 let danger = type.includes("EXAM");
                 let warning = type.includes("ASG") || type.includes("LAB");
-                let highlight = danger ? "has-background-danger" : warning ? "has-background-warning" : "";
+                let highlight = (danger ? "has-background-danger" : warning ? "has-background-warning" : "")  + " " +  (colormode=='dark'? 'has-text-light' : "");
 
                 string_assignment_summary += `<tr><td>${date}</td><td class="${highlight}">${type}</td><td><a href="${link ? link : "#"}">${link ? link : ""}</a></td><td>${due_things_lines[i]}</td></tr>`
             } catch (e) {
@@ -262,18 +286,61 @@ function init(colormode) {
         });
         let assignment_summary = document.createElement('div');
         assignment_summary.innerHTML = string_assignment_summary;
-        //container.append(assignment_summary);
 
         let due_things_content = document.querySelector('pre').innerHTML;
         document.querySelector('pre').replaceWith(assignment_summary);
         document.querySelector('pre').remove();
 
+        
+        //fix calendars
+        document.querySelectorAll('.month').forEach((e)=>{
+            let table = e.nextElementSibling;
+            table.classList.add("b112calendar");
+            table.classList.remove('is-narrow');
+            table.classList.remove('is-fullwidth');
+
+            let header = document.createElement("tr");
+            header.innerHTML = `<thead>
+                                  <tr class="calHeader">
+                                    <th class="is-primary">S</th>
+                                    <th class="is-primary">M</th>
+                                    <th class="is-primary">T</th>
+                                    <th class="is-primary">W</th>
+                                    <th class="is-primary">T</th>
+                                    <th class="is-primary">F</th>
+                                    <th class="is-primary">S</th>
+                                  </tr>
+                                </thead>`;
+            table.insertBefore(header, table.firstChild);
+            table.querySelectorAll("td").forEach((day) => {
+              const a = day.innerHTML.split(";");
+              if (a.length == 3) {
+                day.innerHTML = a[2];
+              } else if (a.length == 4) {
+                if (a[2].search("Holiday") > -1 || a[2].search("Grades") > -1 || a[2].search("End") > -1) {
+                  day.innerHTML = `${a[2]}${a[3]}`;
+                } else if (a[3].search("EXAM") > -1 || a[2].search("MIDTERM") > -1) {
+                  day.innerHTML = `${a[2]}  ${a[3]}`;
+                } else {
+                  day.innerHTML = a[3];
+                }
+              } else if (a.length == 5) {
+                day.innerHTML = `${a[2]}${a[3]}${a[4]}`;
+              } else if (a.length == 6) {
+                day.innerHTML = `${a[3]}${a[4]}${a[5]}`;
+              }
+            })
+        })
+
+
+
+
     } else {
 
     }
 
-    window.evilEmpire = ()=>{
-        document.getElementById('evil_empire').innerHTML +=  `
+    window.evilEmpire = () => {
+        document.getElementById('evil_empire').innerHTML += `
         <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/OS-Wars.gif">
         <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/bmw-wo-windows.gif">
         <img src="https://www2.ucsc.edu/courses/cse112-wm/:/etc/evil-empire/browser-error.gif">
@@ -316,12 +383,14 @@ function init(colormode) {
 chrome.runtime.sendMessage("ready", function (response) {
     console.log(response)
     if (response.colormode == "original") return;
-    init("light");
+
+
 
     if (!response.colormode) {
-        setCss("night");
+        init("night");
+
     } else {
-        setCss(response.colormode);
+        init(response.colormode);
     }
 });
 
