@@ -135,19 +135,21 @@ function init(colormode) {
         pwd = pwd.split("\n")[1].split("PWD: ")[1];
         let newpwd = document.createElement("div");
         let copy_interval = 0;
-        newpwd.onclick = () => {
-            document.getElementById('pwd_text').innerHTML = "Copied!"
-            clearInterval(copy_interval);
-            copy_interval = setInterval(() => {
-                document.getElementById('pwd_text').innerHTML = pwd;
+        //newpwd.style.cursor = "pointer";
+        newpwd.classList = "level";
+        newpwd.innerHTML = `<div class="level-left"><div class="level-item"><span class="is-size-4 tag is-success" style="border-top-right-radius:0;border-bottom-right-radius:0">PWD:</span><span id="pwd_text" class="flash is-size-4 tag is-black has-text-success" style="cursor:pointer; border-top-left-radius:0;border-bottom-left-radius:0;">${pwd}</span><div id="copypwd" style="margin-left: 10px; display:none"><span class="tag has-background-grey">Copied!</span></div></div></div>`;
+        newpwd.innerHTML += ``
+        container.prepend(newpwd);
+
+        document.getElementById('pwd_text').onclick = () => {
+            document.getElementById('copypwd').style.display = "block"
+            clearTimeout(copy_interval);
+            copy_interval = setTimeout(() => {
+                //document.getElementById('pwd_text').innerHTML = pwd;
+                document.getElementById('copypwd').style.display = "none"
             }, 1700)
             copyToClipboard(pwd);
-        }
-        newpwd.style.cursor = "pointer";
-        newpwd.classList = "level"
-        newpwd.innerHTML = `<div class="container"><span class="is-size-4 tag is-success" style="border-top-right-radius:0;border-bottom-right-radius:0">PWD:</span><span id="pwd_text" class="is-size-4 tag is-black has-text-success" style="border-top-left-radius:0;border-bottom-left-radius:0;">${pwd}</span>
-                        </div>`
-        container.prepend(newpwd)
+        };
     }
 
     //insert nav 
@@ -266,13 +268,13 @@ function init(colormode) {
             let header = document.createElement("tr");
             header.innerHTML = `<thead>
                                   <tr class="calHeader">
-                                    <th class="is-primary">S</th>
-                                    <th class="is-primary">M</th>
-                                    <th class="is-primary">T</th>
-                                    <th class="is-primary">W</th>
-                                    <th class="is-primary">T</th>
-                                    <th class="is-primary">F</th>
-                                    <th class="is-primary">S</th>
+                                    <th class="is-primary has-text-centered">S</th>
+                                    <th class="is-primary has-text-centered">M</th>
+                                    <th class="is-primary has-text-centered">T</th>
+                                    <th class="is-primary has-text-centered">W</th>
+                                    <th class="is-primary has-text-centered">T</th>
+                                    <th class="is-primary has-text-centered">F</th>
+                                    <th class="is-primary has-text-centered">S</th>
                                   </tr>
                                 </thead>`;
             table.insertBefore(header, table.firstChild);
@@ -330,7 +332,8 @@ function init(colormode) {
     let footer = document.createElement("div");
     footer.onclick = window.evilEmpire;
     footer.innerHTML = `
-        <div>Evil Empire</div>
+        <br>
+        <div style="cursor:help">Evil Empire</div>
         <div id="evil_empire"><div>
     `;
     container.append(footer);

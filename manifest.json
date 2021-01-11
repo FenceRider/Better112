@@ -42,11 +42,7 @@
   ],
   "permissions": [
     "tabs",
-    "storage",
-    "contextMenus",
-    "webRequest",
-    "webRequestBlocking",
-    "<all_urls>"
+    "storage"
   ],
   "web_accessible_resources": ["css/bluma.css", "css/dark.css", "css/night.css",  "css/content.css"]
 }
