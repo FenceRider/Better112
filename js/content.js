@@ -119,40 +119,8 @@ function init(colormode) {
     //fix tables
     document.querySelectorAll("table").forEach((e) => { 
       if (e.border == '0' ) return; //some tables were used to get things next to each other https://www2.ucsc.edu/courses/cse112-wm/:/Languages/ocaml/matuszek-concise-ocaml.html
-      e.className = "table b112calendar is-bordered is-striped"; 
+      e.className = "table is-bordered is-striped"; 
       e.style.tableLayout = "fixed"; 
-      let header = document.createElement("tr");
-      header.innerHTML = `<thead>
-                            <tr class="calHeader">
-                              <th class="is-primary">S</th>
-                              <th class="is-primary">M</th>
-                              <th class="is-primary">T</th>
-                              <th class="is-primary">W</th>
-                              <th class="is-primary">T</th>
-                              <th class="is-primary">F</th>
-                              <th class="is-primary">S</th>
-                            </tr>
-                          </thead>`;
-      e.insertBefore(header, e.firstChild);
-      e.querySelectorAll("td").forEach((day) => {
-        const a = day.innerHTML.split(";");
-        console.log(a);
-        if (a.length == 3) {
-          day.innerHTML = a[2];
-        } else if (a.length == 4) {
-          if (a[2].search("Holiday") > -1 || a[2].search("Grades") > -1 || a[2].search("End") > -1) {
-            day.innerHTML = `${a[2]}${a[3]}`;
-          } else if (a[3].search("EXAM") > -1 || a[2].search("MIDTERM") > -1) {
-            day.innerHTML = `${a[2]}  ${a[3]}`;
-          } else {
-            day.innerHTML = a[3];
-          }
-        } else if (a.length == 5) {
-          day.innerHTML = `${a[2]}${a[3]}${a[4]}`;
-        } else if (a.length == 6) {
-          day.innerHTML = `${a[3]}${a[4]}${a[5]}`;
-        }
-      })
     })
 
     //fix lists
@@ -175,17 +143,25 @@ function init(colormode) {
         let copy_interval = 0;
         //newpwd.style.cursor = "pointer";
         newpwd.classList = "level";
-        newpwd.innerHTML = `<div class="level-left"><div class="level-item"><span class="is-size-4 tag is-success" style="border-top-right-radius:0;border-bottom-right-radius:0">PWD:</span><span id="pwd_text" class="flash is-size-4 tag is-black has-text-success" style="cursor:pointer; border-top-left-radius:0;border-bottom-left-radius:0;">${pwd}</span><div id="copypwd" style="margin-left: 10px; display:none"><span class="tag has-background-grey">Copied!</span></div></div></div>`;
+        newpwd.innerHTML = `<div class="level-left">
+                              <div class="level-item">
+                                <span class="is-size-4 tag is-success" style="border-top-right-radius:0;border-bottom-right-radius:0">PWD:</span>
+                                <span id="pwd_text" class="flash is-size-4 tag is-black has-text-success" style="cursor:pointer; border-top-left-radius:0;border-bottom-left-radius:0;">${pwd}</span>
+                                <div id="copypwd" style="margin-left: 10px; position: relative; display: none;">
+                                  <span class="tag ${colormode=='light' ? 'is-dark popupDark' : 'is-light popupLight'}">Copied!</span>
+                                </div>
+                              </div>
+                            </div>`;
         newpwd.innerHTML += ``
         container.prepend(newpwd);
+        
 
         document.getElementById('pwd_text').onclick = () => {
             document.getElementById('copypwd').style.display = "block"
             clearTimeout(copy_interval);
             copy_interval = setTimeout(() => {
-                //document.getElementById('pwd_text').innerHTML = pwd;
                 document.getElementById('copypwd').style.display = "none"
-            }, 1700)
+            }, 2000)
             copyToClipboard(pwd);
         };
     }
