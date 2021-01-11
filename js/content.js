@@ -83,6 +83,11 @@ function setCss(mode) {
     addCss(css);
 
     addCss(chrome.extension.getURL('css/content.css'));
+    addStyle(`th {
+                text-align: center !important;
+                border: 1px solid ${mode == 'light' ? 'rgb(250, 250, 250)' : 'rgb(131, 133, 136)'} !important;
+              }`
+    );
 }
 
 
@@ -113,9 +118,42 @@ function init(colormode) {
 
     //fix tables
     document.querySelectorAll("table").forEach((e) => { 
-        if(e.border == '0' ) return; //some tables were used to get things next to each other https://www2.ucsc.edu/courses/cse112-wm/:/Languages/ocaml/matuszek-concise-ocaml.html
-        e.className = "table is-bordered is-striped is-narrow is-fullwidth"; e.style.tableLayout = "fixed"; })
-
+      if (e.border == '0' ) return; //some tables were used to get things next to each other https://www2.ucsc.edu/courses/cse112-wm/:/Languages/ocaml/matuszek-concise-ocaml.html
+      e.className = "table b112calendar is-bordered is-striped"; 
+      e.style.tableLayout = "fixed"; 
+      let header = document.createElement("tr");
+      header.innerHTML = `<thead>
+                            <tr class="calHeader">
+                              <th class="is-primary">S</th>
+                              <th class="is-primary">M</th>
+                              <th class="is-primary">T</th>
+                              <th class="is-primary">W</th>
+                              <th class="is-primary">T</th>
+                              <th class="is-primary">F</th>
+                              <th class="is-primary">S</th>
+                            </tr>
+                          </thead>`;
+      e.insertBefore(header, e.firstChild);
+      e.querySelectorAll("td").forEach((day) => {
+        const a = day.innerHTML.split(";");
+        console.log(a);
+        if (a.length == 3) {
+          day.innerHTML = a[2];
+        } else if (a.length == 4) {
+          if (a[2].search("Holiday") > -1 || a[2].search("Grades") > -1 || a[2].search("End") > -1) {
+            day.innerHTML = `${a[2]}${a[3]}`;
+          } else if (a[3].search("EXAM") > -1 || a[2].search("MIDTERM") > -1) {
+            day.innerHTML = `${a[2]}  ${a[3]}`;
+          } else {
+            day.innerHTML = a[3];
+          }
+        } else if (a.length == 5) {
+          day.innerHTML = `${a[2]}${a[3]}${a[4]}`;
+        } else if (a.length == 6) {
+          day.innerHTML = `${a[3]}${a[4]}${a[5]}`;
+        }
+      })
+    })
 
     //fix lists
     document.querySelectorAll('ul').forEach((e)=>{
@@ -196,9 +234,7 @@ function init(colormode) {
         left.classList.add("level-left")
 
         let right = document.createElement('div');
-        right.classList.add("level-right")
-        right.append();
-        left.append();
+        right.classList.add("level-right");
 
         left.innerHTML = iright;
         right.innerHTML = ileft;
@@ -304,6 +340,7 @@ function init(colormode) {
     } else {
 
     }
+    
 
     window.evilEmpire = () => {
         document.getElementById('evil_empire').innerHTML += `
