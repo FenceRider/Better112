@@ -137,17 +137,25 @@ function init(colormode) {
         let copy_interval = 0;
         //newpwd.style.cursor = "pointer";
         newpwd.classList = "level";
-        newpwd.innerHTML = `<div class="level-left"><div class="level-item"><span class="is-size-4 tag is-success" style="border-top-right-radius:0;border-bottom-right-radius:0">PWD:</span><span id="pwd_text" class="flash is-size-4 tag is-black has-text-success" style="cursor:pointer; border-top-left-radius:0;border-bottom-left-radius:0;">${pwd}</span><div id="copypwd" style="margin-left: 10px; display:none"><span class="tag has-background-grey">Copied!</span></div></div></div>`;
+        newpwd.innerHTML = `<div class="level-left">
+                              <div class="level-item">
+                                <span class="is-size-4 tag is-success" style="border-top-right-radius:0;border-bottom-right-radius:0">PWD:</span>
+                                <span id="pwd_text" class="flash is-size-4 tag is-black has-text-success" style="cursor:pointer; border-top-left-radius:0;border-bottom-left-radius:0;">${pwd}</span>
+                                <div id="copypwd" style="margin-left: 10px; position: relative; display: none;">
+                                  <span class="tag ${colormode=='light' ? 'is-dark popupDark' : 'is-light popupLight'}">Copied!</span>
+                                </div>
+                              </div>
+                            </div>`;
         newpwd.innerHTML += ``
         container.prepend(newpwd);
+        
 
         document.getElementById('pwd_text').onclick = () => {
             document.getElementById('copypwd').style.display = "block"
             clearTimeout(copy_interval);
             copy_interval = setTimeout(() => {
-                //document.getElementById('pwd_text').innerHTML = pwd;
                 document.getElementById('copypwd').style.display = "none"
-            }, 1700)
+            }, 2000)
             copyToClipboard(pwd);
         };
     }

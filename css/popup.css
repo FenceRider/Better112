@@ -79,3 +79,16 @@ body {
 		background-position: 400% 0%;
 	}
 }
+
+
+.homeSvg {
+  fill: rgb(238, 214, 0);
+}
+
+#home:hover .homeSvg {
+  fill: rgb(19, 19, 19);
+}
+
+.homeSvg:hover {
+  fill: rgb(19, 19, 19);
+}
